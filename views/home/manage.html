@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>傻妞数据管理</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <link rel="stylesheet" href="assets\jssdk\sdk.css" />
+  <style>
+    html,
+    body,
+    .app-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root" class="app-wrapper"></div>
+  <script src="assets\jssdk\sdk.js"></script>
+  <script type="text/javascript">
+    (function () {
+      let amis = amisRequire('amis/embed');
+      // 设备管理页面
+      let amisScoped = amis.embed('#root',
+{
+  "type": "page",
+  "title": "傻妞数据管理",
+  "body": [
+    {
+      "type": "crud",
+      "draggable": true,
+      "syncLocation": false,
+      "api": "/datas",
+      "keepItemSelectionOnPageChange": true,
+      "autoGenerateFilter": true,
+      "bulkActions": [],
+      "headerToolbar": [
+        {
+          "type": "button",
+          "label": "新增",
+          "actionType": "dialog",
+          "level": "primary",
+          "dialog": {
+            "title": "新增",
+            "body": {
+              "type": "form",
+              "api": "POST:/datas",
+              "body": [
+                {
+                  "type": "select",
+                  "name": "bucket",
+                  "label": "存储桶",
+                  "source": "/options"
+                },
+                {
+                  "type": "input-text",
+                  "name": "id",
+                  "label": "键"
+                },
+                {
+                  "type": "input-text",
+                  "name": "value",
+                  "label": "值"
+                }
+              ]
+            }
+          }
+        },
+        "export-excel",
+        {
+          "type": "tpl",
+          "tpl": "一共有 ${count} 行数据。",
+          "className": "v-middle"
+        },
+        {
+          "type": "columns-toggler",
+          "align": "right",
+          "draggable": true
+        },
+        {
+          "type": "drag-toggler",
+          "align": "right"
+        }
+      ],
+      "footerToolbar": [],
+      "columns": [
+        {
+          "type": "static",
+          "label": "存储桶",
+          "name": "bucket",
+          "searchable": {
+            "type": "input-text",
+            "name": "bucket",
+            "label": "存储桶",
+            "placeholder": "输入名称"
+          }
+        },
+        {
+          "name": "id",
+          "label": "键",
+          "type": "text",
+          "searchable": {
+            "type": "input-text",
+            "name": "id",
+            "label": "键",
+            "placeholder": "输入键"
+          }
+        },
+        {
+          "type": "input-text",
+          "label": "值",
+          "name": "value",
+          "searchable": {
+            "type": "input-text",
+            "name": "value",
+            "label": "值",
+            "placeholder": "输入值"
+          }
+        },
+        {
+          "type": "operation",
+          "label": "操作",
+          "buttons": [
+            {
+              "type": "button",
+              "actionType": "ajax",
+              "label": "删除",
+              "confirmText": "您确认要删除?",
+              "api": "delete:/datas?bucket=$bucket&id=$id"
+            },
+            {
+              "type": "button",
+              "label": "编辑值",
+              "actionType": "dialog",
+              "dialog": {
+                "title": "修改",
+                "body": [
+                  {
+                    "type": "form",
+                    "title": "表单",
+                    "body": [
+                      {
+                        "label": "值",
+                        "type": "textarea",
+                        "name": "value"
+                      },
+                      {
+                        "type": "hidden",
+                        "name": "bucket"
+                      },
+                      {
+                        "type": "hidden",
+                        "name": "id"
+                      }
+                    ],
+                    "api": "/datas"
+                  }
+                ],
+                "type": "dialog",
+                "closeOnEsc": false,
+                "closeOnOutside": false,
+                "showCloseButton": true
+              }
+            }
+          ]
+        }
+      ],
+      "quickSaveApi": "/bulkUpdate"
+    }
+  ]
+}
+      );
+    })();
+  </script>
+</body>
+
+</html>
